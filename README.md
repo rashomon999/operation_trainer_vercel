@@ -19,3 +19,7 @@ nuevas, reemplaza los archivos con el mismo nombre.
 
 ## Redirección automática
 `AUTO_REDIRECT = true` hace que la página salte sola a Google Play tras `AUTO_REDIRECT_DELAY` ms.
+
+
+--link:
+https://operation-trainer.vercel.app/
