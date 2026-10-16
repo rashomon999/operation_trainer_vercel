@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Operation Trainer — Tablas, divisiones y leyes de exponentes</title>
+<meta name="description" content="App gratuita para practicar tablas de multiplicar del 1 al 20, divisiones con decimal exacto, fracciones y leyes de exponentes y logaritmos. Sin anuncios, sin internet. Español e inglés.">
+<meta name="theme-color" content="#08051c">
+<link rel="icon" href="/img/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/img/icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Operation Trainer — Tablas, divisiones y leyes">
+<meta property="og:description" content="Tablas hasta el 20, divisiones, fracciones y leyes de exponentes y logaritmos. Gratis, sin anuncios, en Google Play.">
+<meta property="og:image" content="/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink-950:#06041a;
+  --ink-900:#08051c;
+  --ink-800:#170a4a;
+  --violet:#6d28d9;
+  --violet-bright:#8b5cf6;
+  --violet-soft:#c4b5fd;
+  --amber:#fbbf24;
+  --line:rgba(255,255,255,.10);
+  --text:#f5f3ff;
+  --muted:#a7a0cc;
+  --display:'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --math:Georgia, 'Times New Roman', serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);background:var(--ink-950);color:var(--text);
+  line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+.bg{position:fixed;inset:0;z-index:-3;
+  background:radial-gradient(115% 75% at 50% -8%, #4a10d6 0%, #1a0b5c 45%, #06041a 80%);}
+.bg::after{content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(42% 28% at 82% 16%, rgba(251,191,36,.13), transparent 70%),
+    radial-gradient(48% 32% at 14% 34%, rgba(139,92,246,.24), transparent 70%);}
+/* × watermark */
+.mark{
+  position:fixed;top:-10vh;left:50%;transform:translateX(-50%);
+  font-family:var(--math);font-size:min(80vw,720px);
+  line-height:1;color:#fff;opacity:.035;z-index:-2;pointer-events:none;user-select:none;
+}
+.grain{position:fixed;inset:0;z-index:-1;opacity:.05;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 22px}
+
+/* ---------- language switch ---------- */
+.langbar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:flex-end;padding:16px 22px 0;z-index:5}
+.langswitch{display:inline-flex;align-items:center;gap:2px;padding:3px;
+  border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:999px;backdrop-filter:blur(8px)}
+.langswitch button{font:inherit;font-size:12px;font-weight:600;letter-spacing:.04em;
+  color:#c9bff5;background:transparent;border:0;cursor:pointer;padding:6px 13px;border-radius:999px;
+  transition:background .2s,color .2s}
+.langswitch button[aria-pressed="true"]{background:rgba(255,255,255,.95);color:#1e0a5c}
+
+/* ---------- hero ---------- */
+header.hero{padding:clamp(60px,13vw,104px) 0 clamp(28px,6vw,44px);text-align:center;position:relative}
+.icon-wrap{position:relative;display:inline-block;margin-bottom:26px}
+.icon-wrap::before{content:"";position:absolute;inset:-38%;border-radius:50%;
+  background:radial-gradient(circle, rgba(139,92,246,.50), transparent 68%);filter:blur(16px)}
+.app-icon{position:relative;width:clamp(94px,23vw,118px);height:auto;display:block;
+  border-radius:24%;box-shadow:0 20px 44px rgba(60,10,180,.6), 0 0 0 1px rgba(255,255,255,.12)}
+.eyebrow{font-size:11.5px;letter-spacing:.20em;text-transform:uppercase;color:var(--violet-soft);font-weight:600;margin-bottom:14px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(36px,9.5vw,64px);
+  line-height:1.02;letter-spacing:-.03em;margin-bottom:16px}
+h1 .grad{background:linear-gradient(100deg,#c4b5fd,#a78bfa 45%,#fbbf24);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.tagline{font-size:clamp(16px,4.3vw,20px);color:#ddd6fe;max-width:36ch;margin:0 auto 24px}
+
+/* stats */
+.stats{display:flex;justify-content:center;gap:0;margin:0 auto 28px;max-width:430px;
+  border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.045);backdrop-filter:blur(8px);overflow:hidden}
+.stat{flex:1;padding:13px 8px;text-align:center}
+.stat + .stat{border-left:1px solid var(--line)}
+.stat b{display:block;font-family:var(--display);font-size:clamp(20px,5.4vw,25px);font-weight:700;letter-spacing:-.02em;color:#fff;line-height:1.2}
+.stat span{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* ---------- CTA ---------- */
+.cta{display:inline-flex;align-items:center;gap:13px;
+  background:linear-gradient(150deg,#a78bfa,#6d28d9 52%,#4c1d95);color:#fff;text-decoration:none;
+  padding:15px 30px 15px 24px;border-radius:16px;font-weight:700;
+  font-size:clamp(15.5px,4.2vw,17px);letter-spacing:-.01em;
+  box-shadow:0 14px 36px rgba(109,40,217,.5), inset 0 1px 0 rgba(255,255,255,.28);
+  transition:transform .18s ease, box-shadow .18s ease}
+.cta:hover{transform:translateY(-2px);box-shadow:0 22px 48px rgba(109,40,217,.6), inset 0 1px 0 rgba(255,255,255,.28)}
+.cta:active{transform:translateY(0) scale(.985)}
+.cta svg{flex:0 0 auto}
+.cta .lines{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+.cta .small{font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;opacity:.78}
+.cta .big{font-size:1.06em;font-weight:700}
+.cta-note{margin-top:15px;font-size:13px;color:var(--muted)}
+.cta-note b{color:#e4defc;font-weight:600}
+
+/* ---------- formula ---------- */
+.formula{text-align:center;padding:clamp(26px,7vw,48px) 0}
+.formula .eq{
+  display:inline-flex;align-items:center;gap:clamp(12px,3.5vw,22px);flex-wrap:wrap;justify-content:center;
+  font-family:var(--math);font-size:clamp(28px,8vw,46px);color:#f1edff;
+  border:1px solid var(--line);border-radius:20px;padding:clamp(18px,5vw,28px) clamp(20px,6vw,42px);
+  background:rgba(255,255,255,.04);backdrop-filter:blur(8px);
+}
+.formula .eq i{font-style:italic}
+.formula .eq sup{font-size:.6em}
+.formula .eq .op{color:var(--violet-soft);font-style:normal}
+.formula .eq .ans{color:var(--amber)}
+.formula figcaption{margin-top:14px;font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* ---------- features ---------- */
+.features{display:grid;gap:14px;padding:clamp(20px,5vw,40px) 0;grid-template-columns:1fr}
+@media(min-width:720px){.features{grid-template-columns:repeat(3,1fr);gap:18px}}
+.card{border:1px solid var(--line);border-radius:18px;padding:24px 22px;
+  background:linear-gradient(170deg, rgba(255,255,255,.075), rgba(255,255,255,.022));backdrop-filter:blur(8px)}
+.card .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.38);margin-bottom:15px}
+.card h3{font-family:var(--display);font-weight:600;font-size:19px;margin-bottom:7px;letter-spacing:-.015em}
+.card p{font-size:14.5px;color:var(--muted);line-height:1.55}
+.ovl{text-decoration:overline}
+
+/* ---------- topics ---------- */
+.topics{padding:clamp(20px,5vw,36px) 0 clamp(26px,6vw,44px);text-align:center}
+.topics h2{font-family:var(--display);font-weight:600;font-size:clamp(22px,6vw,30px);letter-spacing:-.02em;margin-bottom:18px}
+.tlist{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.topic{font-size:13px;font-weight:500;color:#e4defc;border:1px solid var(--line);
+  background:rgba(255,255,255,.05);padding:8px 15px;border-radius:999px}
+.topic b{color:var(--amber);font-weight:700;font-variant-numeric:tabular-nums}
+.pledge{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-size:13px;color:var(--muted)}
+.pledge span{display:inline-flex;align-items:center;gap:7px}
+.pledge span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--violet-bright)}
+
+/* ---------- screenshots ---------- */
+.shots-head{text-align:center;margin-bottom:24px}
+.shots-head h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,6.5vw,34px);letter-spacing:-.02em;margin-bottom:8px}
+.shots-head p{color:var(--muted);font-size:15px}
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:6px 22px 26px;margin:0 -22px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail figure{flex:0 0 auto;scroll-snap-align:center;width:min(220px,58vw)}
+@media(min-width:960px){.shots-head p{display:none}.rail{overflow:visible;margin:0;padding:6px 0 26px}.rail figure{flex:1 1 0;width:auto}}
+.rail img{width:100%;height:auto;display:block;border-radius:20px;
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 20px 46px rgba(0,0,0,.55);background:#f3f3f6}
+.rail figcaption{margin-top:11px;font-size:12.5px;color:var(--muted);text-align:center}
+
+/* ---------- closing ---------- */
+.closing{text-align:center;padding:clamp(28px,7vw,56px) 0 clamp(36px,8vw,64px)}
+.closing h2{font-family:var(--display);font-weight:700;font-size:clamp(25px,6.8vw,38px);letter-spacing:-.025em;margin-bottom:12px}
+.closing p{color:var(--muted);max-width:38ch;margin:0 auto 26px;font-size:15.5px}
+
+footer{border-top:1px solid var(--line);padding:26px 0 42px;text-align:center;font-size:13px;color:#7d74a8}
+.divider{width:54px;height:1px;background:linear-gradient(90deg,transparent,var(--violet-bright),transparent);margin:0 auto}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.cta{transition:none}}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="mark">×</div><div class="grain"></div>
+
+<div class="langbar">
+  <div class="langswitch" role="group" aria-label="Idioma / Language">
+    <button type="button" data-lang="es" aria-pressed="true">Español</button>
+    <button type="button" data-lang="en" aria-pressed="false">English</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="icon-wrap">
+      <img class="app-icon" src="/img/icon.png" alt="Operation Trainer" width="512" height="512">
+    </div>
+    <p class="eyebrow" data-i18n="eyebrow">Aplicación para Android</p>
+    <h1><span data-i18n="h1a">Operation</span> <span class="grad" data-i18n="h1b">Trainer</span></h1>
+    <p class="tagline" data-i18n="tagline">Tablas, divisiones y leyes de exponentes y logaritmos. Escribe tu respuesta y compruébala al instante.</p>
+
+    <div class="stats">
+      <div class="stat"><b>385</b><span data-i18n="stat1">Ejercicios</span></div>
+      <div class="stat"><b>20</b><span data-i18n="stat2">Tablas</span></div>
+      <div class="stat"><b>0</b><span data-i18n="stat3">Anuncios</span></div>
+    </div>
+
+    <a class="cta" href="#" rel="noopener">
+      <svg width="26" height="28" viewBox="0 0 88 100" aria-hidden="true">
+        <path d="M0 0 L57 50 L0 50 Z" fill="#fff" opacity=".95"/>
+        <path d="M0 100 L57 50 L0 50 Z" fill="#fff" opacity=".75"/>
+        <path d="M0 0 L88 50 L57 50 Z" fill="#fff" opacity=".55"/>
+        <path d="M0 100 L88 50 L57 50 Z" fill="#fff" opacity=".38"/>
+      </svg>
+      <span class="lines">
+        <span class="small" data-i18n="ctaSmall">Disponible en</span>
+        <span class="big">Google Play</span>
+      </span>
+    </a>
+    <p class="cta-note" data-i18n-html="ctaNote">O búscala como <b>“Operation Trainer”</b> en la Play Store.</p>
+  </header>
+
+  <div class="divider"></div>
+
+  <figure class="formula reveal">
+    <div class="eq">
+      <span><i>a</i><sup><i>m</i></sup> · <i>a</i><sup><i>n</i></sup></span>
+      <span class="op">=</span>
+      <span class="ans"><i>a</i><sup><i>m</i>+<i>n</i></sup></span>
+    </div>
+    <figcaption data-i18n="formulaCap">Leyes de exponentes · Regla del producto</figcaption>
+  </figure>
+
+  <section class="features">
+    <div class="card reveal">
+      <div class="ico">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </div>
+      <h3 data-i18n="f1t">Tablas del 1 al 20</h3>
+      <p data-i18n="f1b">Doce preguntas por tabla, de ×1 a ×12. La mayoría de apps se queda en el 10; esta llega al 20. Cada tabla se pone verde al completarla.</p>
+    </div>
+    <div class="card reveal">
+      <div class="ico">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><circle cx="12" cy="6.5" r="1.4" fill="#c4b5fd"/><circle cx="12" cy="17.5" r="1.4" fill="#c4b5fd"/></svg>
+      </div>
+      <h3 data-i18n="f2t">Decimales exactos</h3>
+      <p data-i18n-html="f2b">81 divisiones que piden el decimal exacto, no un redondeo. Para las periódicas hay un botón que escribe 0.<span class="ovl">3</span> como se debe.</p>
+    </div>
+    <div class="card reveal">
+      <div class="ico">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16"/><path d="M7 15c3 0 4-8 7-8s3 4 6 4"/></svg>
+      </div>
+      <h3 data-i18n="f3t">Leyes con nombre</h3>
+      <p data-i18n="f3b">La app te dice la regla, tú escribes el otro lado o eliges entre cuatro opciones. Acepta la fórmula escrita de cualquier forma.</p>
+    </div>
+  </section>
+
+  <section class="topics reveal">
+    <h2 data-i18n="topicsT">Lo que vas a practicar</h2>
+    <div class="tlist">
+      <span class="topic" data-i18n-html="t1">Tablas de multiplicar <b>240</b></span>
+      <span class="topic" data-i18n-html="t2">Divisiones <b>81</b></span>
+      <span class="topic" data-i18n-html="t3">Multiplicar fracciones <b>20</b></span>
+      <span class="topic" data-i18n-html="t4">Dividir fracciones <b>20</b></span>
+      <span class="topic" data-i18n-html="t5">Leyes de exponentes <b>11</b></span>
+      <span class="topic" data-i18n-html="t6">Reglas de logaritmos <b>13</b></span>
+    </div>
+    <div class="pledge">
+      <span data-i18n="p1">Sin anuncios</span>
+      <span data-i18n="p2">Sin internet</span>
+      <span data-i18n="p3">Sin cuenta</span>
+      <span data-i18n="p4">Sin permisos</span>
+    </div>
+  </section>
+
+  <section class="shots">
+    <div class="shots-head reveal">
+      <h2 data-i18n="shotsT">Así se ve por dentro</h2>
+      <p data-i18n="shotsB">Desliza para verlo →</p>
+    </div>
+    <div class="rail">
+      <figure><img id="s1" src="/img/menu.jpg" alt="" width="540" height="1171" loading="lazy"><figcaption data-i18n="cap1">El menú es tu mapa</figcaption></figure>
+      <figure><img id="s2" src="/img/table.jpg" alt="" width="540" height="1171" loading="lazy"><figcaption data-i18n="cap2">Tablas hasta el 20</figcaption></figure>
+      <figure><img id="s3" src="/img/division.jpg" alt="" width="540" height="1171" loading="lazy"><figcaption data-i18n="cap3">Divisiones con decimal exacto</figcaption></figure>
+      <figure><img id="s4" src="/img/division_solution.jpg" alt="" width="540" height="1171" loading="lazy"><figcaption data-i18n="cap4">Ver la solución</figcaption></figure>
+      <figure><img id="s5" src="/img/law.jpg" alt="" width="540" height="1171" loading="lazy"><figcaption data-i18n="cap5">Escribe la regla</figcaption></figure>
+      <figure><img id="s6" src="/img/law_solution.jpg" alt="" width="540" height="1171" loading="lazy"><figcaption data-i18n="cap6">Y compruébala</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="closing reveal">
+    <h2 data-i18n="closeT">Empieza por la tabla del 7</h2>
+    <p data-i18n="closeB">Gratis, sin anuncios y sin internet. Abre la app y resuelve la primera en segundos.</p>
+    <a class="cta" href="#" rel="noopener">
+      <svg width="26" height="28" viewBox="0 0 88 100" aria-hidden="true">
+        <path d="M0 0 L57 50 L0 50 Z" fill="#fff" opacity=".95"/>
+        <path d="M0 100 L57 50 L0 50 Z" fill="#fff" opacity=".75"/>
+        <path d="M0 0 L88 50 L57 50 Z" fill="#fff" opacity=".55"/>
+        <path d="M0 100 L88 50 L57 50 Z" fill="#fff" opacity=".38"/>
+      </svg>
+      <span class="lines">
+        <span class="small" data-i18n="ctaSmall">Disponible en</span>
+        <span class="big">Google Play</span>
+      </span>
+    </a>
+  </section>
+
+  <footer><p data-i18n="footer">Operation Trainer · Tablas, divisiones y leyes</p></footer>
+
+</div>
+
+<script>
+(function(){
+  /* ====== CONFIGURACIÓN — cambia solo estas líneas ====== */
+  var PLAY_URL = "https://play.google.com/store/apps/details?id=com.myshkin.OperationTrainer";
+  var AUTO_REDIRECT = false;      // true = salta solo a Google Play
+  var AUTO_REDIRECT_DELAY = 1800; // ms
+  /* ===================================================== */
+
+  var T = {
+    es: {
+      title:"Operation Trainer — Tablas, divisiones y leyes de exponentes",
+      meta:"App gratuita para practicar tablas de multiplicar del 1 al 20, divisiones con decimal exacto, fracciones y leyes de exponentes y logaritmos. Sin anuncios, sin internet. Español e inglés.",
+      eyebrow:"Aplicación para Android",
+      h1a:"Operation", h1b:"Trainer",
+      tagline:"Tablas, divisiones y leyes de exponentes y logaritmos. Escribe tu respuesta y compruébala al instante.",
+      stat1:"Ejercicios", stat2:"Tablas", stat3:"Anuncios",
+      ctaSmall:"Disponible en",
+      ctaNote:'O búscala como <b>“Operation Trainer”</b> en la Play Store.',
+      formulaCap:"Leyes de exponentes · Regla del producto",
+      f1t:"Tablas del 1 al 20",
+      f1b:"Doce preguntas por tabla, de ×1 a ×12. La mayoría de apps se queda en el 10; esta llega al 20. Cada tabla se pone verde al completarla.",
+      f2t:"Decimales exactos",
+      f2b:"81 divisiones que piden el decimal exacto, no un redondeo. Para las periódicas hay un botón que escribe 0.<span class='ovl'>3</span> como se debe.",
+      f3t:"Leyes con nombre",
+      f3b:"La app te dice la regla, tú escribes el otro lado o eliges entre cuatro opciones. Acepta la fórmula escrita de cualquier forma.",
+      topicsT:"Lo que vas a practicar",
+      t1:"Tablas de multiplicar <b>240</b>", t2:"Divisiones <b>81</b>", t3:"Multiplicar fracciones <b>20</b>",
+      t4:"Dividir fracciones <b>20</b>", t5:"Leyes de exponentes <b>11</b>", t6:"Reglas de logaritmos <b>13</b>",
+      p1:"Sin anuncios", p2:"Sin internet", p3:"Sin cuenta", p4:"Sin permisos",
+      shotsT:"Así se ve por dentro", shotsB:"Desliza para verlo →",
+      cap1:"El menú es tu mapa", cap2:"Tablas hasta el 20", cap3:"Divisiones con decimal exacto",
+      cap4:"Ver la solución", cap5:"Escribe la regla", cap6:"Y compruébala",
+      closeT:"Empieza por la tabla del 7",
+      closeB:"Gratis, sin anuncios y sin internet. Abre la app y resuelve la primera en segundos.",
+      footer:"Operation Trainer · Tablas, divisiones y leyes",
+      alts:["Menú con tablas, divisiones y leyes","Pregunta de la tabla del 13","División 1/4 con botón de periódico","Solución de 4/5 = 0.8","Ley del producto de potencias","Solución de la ley del producto"]
+    },
+    en: {
+      title:"Operation Trainer — Times tables, division and exponent laws",
+      meta:"Free app to practice times tables from 1 to 20, division with exact decimals, fractions, and the laws of exponents and logarithms. No ads, works offline. English and Spanish.",
+      eyebrow:"Android app",
+      h1a:"Operation", h1b:"Trainer",
+      tagline:"Times tables, division, and the laws of exponents and logarithms. Type your answer and check it instantly.",
+      stat1:"Exercises", stat2:"Tables", stat3:"Ads",
+      ctaSmall:"Get it on",
+      ctaNote:'Or search for <b>“Operation Trainer”</b> on the Play Store.',
+      formulaCap:"Laws of exponents · Product rule",
+      f1t:"Tables from 1 to 20",
+      f1b:"Twelve questions per table, ×1 through ×12. Most apps stop at 10; this one goes to 20. Each table turns green when you complete it.",
+      f2t:"Exact decimals",
+      f2b:"81 divisions that ask for the exact decimal, not a rounded one. For repeating decimals there's a button to write 0.<span class='ovl'>3</span> properly.",
+      f3t:"Rules by name",
+      f3b:"The app names the rule; you write the other side or pick from four options. It accepts the formula however you type it.",
+      topicsT:"What you will practice",
+      t1:"Times tables <b>240</b>", t2:"Division <b>81</b>", t3:"Multiplying fractions <b>20</b>",
+      t4:"Dividing fractions <b>20</b>", t5:"Laws of exponents <b>11</b>", t6:"Logarithm rules <b>13</b>",
+      p1:"No ads", p2:"Works offline", p3:"No account", p4:"No permissions",
+      shotsT:"A look inside", shotsB:"Swipe to see →",
+      cap1:"The menu is your map", cap2:"Tables up to 20", cap3:"Division with exact decimals",
+      cap4:"See the solution", cap5:"Write the rule", cap6:"And check it",
+      closeT:"Start with the 7 times table",
+      closeB:"Free, no ads, no internet needed. Open the app and solve your first one in seconds.",
+      footer:"Operation Trainer · Tables, division and laws",
+      alts:["Menu with tables, division and laws","Question from the 13 times table","Division 1/4 with repeating-decimal button","Solution 4/5 = 0.8","Product of powers rule","Solution of the product rule"]
+    }
+  };
+
+  function apply(lang){
+    var t = T[lang]; if(!t) return;
+    document.documentElement.lang = lang;
+    document.title = t.title;
+    var md = document.querySelector('meta[name="description"]');
+    if (md) md.setAttribute('content', t.meta);
+
+    var i, els = document.querySelectorAll('[data-i18n]');
+    for (i=0;i<els.length;i++){
+      var k = els[i].getAttribute('data-i18n');
+      if (t[k] != null) els[i].textContent = t[k];
+    }
+    var elsH = document.querySelectorAll('[data-i18n-html]');
+    for (i=0;i<elsH.length;i++){
+      var kh = elsH[i].getAttribute('data-i18n-html');
+      if (t[kh] != null) elsH[i].innerHTML = t[kh];
+    }
+    for (i=0;i<t.alts.length;i++){
+      var img = document.getElementById('s'+(i+1));
+      if (img) img.alt = t.alts[i];
+    }
+    var btns = document.querySelectorAll('.langswitch button');
+    for (i=0;i<btns.length;i++){
+      btns[i].setAttribute('aria-pressed', btns[i].getAttribute('data-lang')===lang ? 'true' : 'false');
+    }
+    try { localStorage.setItem('ot_lang', lang); } catch(e){}
+  }
+
+  /* 1) ?lang=  2) preferencia guardada  3) idioma del navegador  4) español */
+  var qs = (location.search.match(/[?&]lang=(en|es)/i)||[])[1];
+  var saved = null; try { saved = localStorage.getItem('ot_lang'); } catch(e){}
+  var nav = (navigator.language || navigator.userLanguage || 'es').toLowerCase();
+  var lang = (qs || saved || (nav.indexOf('es') === 0 ? 'es' : 'en')).toLowerCase();
+  if (lang !== 'en' && lang !== 'es') lang = 'es';
+  apply(lang);
+
+  var switchBtns = document.querySelectorAll('.langswitch button');
+  for (var b=0;b<switchBtns.length;b++){
+    switchBtns[b].addEventListener('click', function(){ apply(this.getAttribute('data-lang')); });
+  }
+
+  var links = document.querySelectorAll('.cta');
+  for (var l=0;l<links.length;l++){ links[l].href = PLAY_URL; }
+
+  if (AUTO_REDIRECT){
+    setTimeout(function(){ window.location.href = PLAY_URL; }, AUTO_REDIRECT_DELAY);
+  }
+
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
+</body>
+</html>
